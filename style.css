@@ -5,7 +5,6 @@ body, html {
   height: 100%;
   overflow: hidden;
   font-family: sans-serif;
-  background: linear-gradient(to top, #87ceeb, #b0e0e6);
 }
 
 #scene {
@@ -19,27 +18,30 @@ body, html {
   top: 0;
   left: 0;
   width: 100%;
-  height: 55%;   /* sky top portion */
-  background: linear-gradient(to top, #87ceeb, #ffd1a4); /* sunset gradient */
+  height: 35%;
+  background: linear-gradient(to top, #87ceeb, #ffd1a4); /* sunset sky */
   z-index: 0;
   overflow: visible;
 }
 
 #garden {
   position: absolute;
-  top: 35%;       /* framed garden */
+  top: 35%;
   left: 0;
   width: 100%;
-  height: 45%;
+  height: 65%;
   overflow: visible;
   z-index: 1;
   pointer-events: none;
+  background: linear-gradient(to top, #2e7d32, #66bb6a); /* green grass */
 }
 
 .flower {
   position: absolute;
-  width: 35px;
-  height: 35px;
+  width: 8vw;
+  height: 8vw;
+  max-width: 40px;
+  max-height: 40px;
   background-size: cover;
   opacity: 0;
   transform: scale(0);
@@ -49,8 +51,10 @@ body, html {
 
 .petal {
   position: absolute;
-  width: 12px;
-  height: 12px;
+  width: 2vw;
+  height: 2vw;
+  max-width: 12px;
+  max-height: 12px;
   background: pink;
   border-radius: 50%;
   opacity: 0.8;
@@ -67,7 +71,7 @@ body, html {
 
 .cloud {
   position: absolute;
-  font-size: 32px;
+  font-size: 6vw;
   color: #fff;
   opacity: 0.7;
   font-weight: bold;
@@ -86,7 +90,7 @@ body, html {
 
 #actionBtn {
   position: absolute;
-  bottom: 14px;
+  bottom: 2%;
   left: 50%;
   transform: translateX(-50%);
   z-index: 9999;
@@ -105,7 +109,7 @@ body, html {
   bottom: 10%;
   width: 100%;
   text-align: center;
-  font-size: 24px;
+  font-size: 5vw;
   color: #fff;
   opacity: 0;
   transition: opacity 1.5s ease;
