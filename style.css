@@ -1,77 +1,167 @@
-body, html {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  overflow: hidden;
-  font-family: 'Segoe UI', sans-serif;
-}
+/* Basic page */
+* { box-sizing: border-box; }
+html,body { height:100%; margin:0; padding:0; font-family: 'Segoe UI', system-ui, -apple-system, Roboto, 'Helvetica Neue', Arial; background: #87CEEB; }
+#scene { position: relative; width:100%; height:100vh; overflow:hidden; }
 
-#scene { position: relative; width: 100%; height: 100%; overflow: hidden; }
+/* Sky */
 #sky {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(to top, #87CEEB, #B0E0E6);
+  position:absolute; inset:0;
+  background: linear-gradient(to top, #7ec0ee 0%, #bfe9ff 50%, #e6f7ff 100%);
   z-index: 1;
-}
-
-#field {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  height: 50%;
-  background: linear-gradient(to top, #228B22, #32CD32);
-  z-index: 2;
   overflow: hidden;
 }
 
-#garden { position: absolute; bottom: 50px; width: 100%; height: calc(50% - 50px); z-index: 3; }
-
-button#actionBtn {
-  position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
-  padding: 12px 20px; font-size: 18px; background-color: #FFB6C1;
-  border: none; border-radius: 8px; cursor: pointer; z-index: 4;
+/* Field (grass) */
+#field {
+  position:absolute; left:0; right:0; bottom:0;
+  height:46%;
+  background: linear-gradient(180deg,#2e8b57,#3cb371 60%, #7cfc00 100%);
+  z-index: 2;
+  box-shadow: inset 0 30px 60px rgba(0,0,0,0.08);
 }
 
+/* Garden (plants layer) */
+#garden {
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:60px;
+  height: calc(46% - 60px);
+  z-index: 4;
+  pointer-events: none;
+}
+
+/* Button */
+button#actionBtn {
+  position:absolute;
+  bottom:14px;
+  left:50%;
+  transform: translateX(-50%);
+  z-index: 6;
+  padding:12px 20px;
+  border-radius:10px;
+  border:none;
+  font-size:16px;
+  background: linear-gradient(180deg,#ffb6c1,#ff8aa3);
+  color:#3b0b17;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+  cursor:pointer;
+}
+
+/* Flower style */
 .flower {
-  position: absolute;
-  width: 25px; height: 25px; /* smaller for dense letters */
+  position:absolute;
+  width:25px; height:25px;
   background-size: cover;
+  background-position: center;
   opacity: 0;
   transform: scale(0) rotate(0deg);
-  transition: transform 1s ease, opacity 1s ease;
-  z-index: 4;
+  transition: transform 900ms cubic-bezier(.2,.9,.2,1), opacity 700ms ease;
+  will-change: transform, opacity;
+  z-index: 5;
+  pointer-events: none;
 }
 
+/* Leaf */
 .leaf {
-  width: 12px; height: 12px; background: green; border-radius: 50%;
-  position: absolute; opacity: 0; animation: sway 2s infinite ease-in-out alternate;
+  position:absolute;
+  width:10px; height:10px;
+  background: rgba(23,120,23,0.95);
+  border-radius:50%;
+  opacity:0;
+  transform-origin:center;
+  animation: leafSway 2.5s infinite ease-in-out;
+  z-index:4;
 }
 
-@keyframes sway {
+@keyframes leafSway {
   0% { transform: translateX(0) rotate(0deg); }
-  50% { transform: translateX(4px) rotate(5deg); }
+  50% { transform: translateX(6px) rotate(6deg); }
   100% { transform: translateX(0) rotate(0deg); }
 }
 
-.cloud {
-  position: absolute; font-size: 48px; color: white;
-  opacity: 0; transition: opacity 3s ease, transform 8s linear; z-index: 2;
-}
-
-#finalMsg {
-  font-size: 36px; color: #fff; text-align: center; opacity: 0;
-  text-shadow: 0 0 8px pink, 0 0 15px #fff;
-  transition: opacity 3s ease; position: absolute; top: 150px; left: 50%; transform: translateX(-50%);
-}
-
+/* Petals falling */
 .petal {
-  position: absolute; width: 15px; height: 15px; background: pink;
-  border-radius: 50%; opacity: 0.8; animation: fall 5s linear infinite;
+  position:absolute;
+  width:14px; height:14px;
+  background: radial-gradient(circle at 40% 30%, #ffd4e1 0 45%, #ff9fc1 46% 100%);
+  border-radius: 50% 45% 45% 50%;
+  opacity:0.9;
+  z-index:5;
+  pointer-events:none;
+  animation: petalFall linear infinite;
+}
+@keyframes petalFall {
+  0% { transform: translateY(0) rotate(0deg); opacity:1; }
+  80% { opacity:0.9; }
+  100% { transform: translateY(650px) rotate(360deg); opacity:0; }
 }
 
-@keyframes fall {
-  0% { transform: translateY(0) rotate(0deg); opacity: 0.8; }
-  50% { opacity: 1; }
-  100% { transform: translateY(600px) rotate(360deg); opacity: 0; }
+/* Clouds (initial ones drift slowly) */
+.cloud {
+  position:absolute;
+  background: radial-gradient(circle at 30% 30%, #fff 0 45%, rgba(255,255,255,0.95) 46% 65%, rgba(255,255,255,0.85) 66% 100%);
+  width:160px;
+  height:60px;
+  border-radius: 80px;
+  opacity:0.95;
+  filter: drop-shadow(0 6px 12px rgba(0,0,0,0.06));
+  z-index:3;
+  transform: translate3d(0,0,0);
+}
+
+/* cloud fluff pieces */
+.cloud::before, .cloud::after {
+  content:"";
+  position:absolute;
+  background: inherit;
+  width:110px; height:70px; border-radius:70px;
+  top:-24px;
+}
+.cloud::after { left:60px; width:120px; height:72px; top:-30px; }
+
+/* Cloud drifting animation: vary by data-speed */
+@keyframes driftRight {
+  from { transform: translateX(-30px); }
+  to { transform: translateX(30px); }
+}
+
+/* Puffy letter cloud style (on formation they will be positioned by JS) */
+.cloud.letter {
+  width:60px; height:60px;
+  border-radius:50px;
+  background: white;
+  opacity: 0;
+  transition: all 1200ms cubic-bezier(.2,.9,.2,1);
+  filter: drop-shadow(0 8px 18px rgba(0,0,0,0.08));
+}
+
+/* final message */
+#finalMsg {
+  position:absolute;
+  top:12%;
+  left:50%;
+  transform: translateX(-50%);
+  font-size:32px;
+  color:#fff;
+  opacity:0;
+  text-shadow: 0 0 12px rgba(255,200,230,0.9), 0 0 28px rgba(255,255,255,0.25);
+  z-index:6;
+  pointer-events:none;
+}
+
+/* subtle perspective: make ground appear wide */
+#field::before {
+  content:"";
+  position:absolute;
+  left:0; right:0; top:-20%;
+  height:120%;
+  background: radial-gradient(ellipse at 50% -10%, rgba(255,255,255,0.06), rgba(255,255,255,0) 35%);
+  pointer-events:none;
+}
+
+/* responsive tweaks */
+@media (max-width:900px) {
+  .flower { width:20px; height:20px; }
+  .petal { width:12px; height:12px; }
 }
