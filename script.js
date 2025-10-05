@@ -4,49 +4,51 @@ const sky = document.getElementById('sky');
 const music = document.getElementById('music');
 let step = 0;
 
-// Flower & cloud config
-const FLOWER_SIZE = 25;
-const PETAL_COUNT = 24;
-const INITIAL_CLOUDS = 20;
+// Config
+const PETAL_COUNT=24;
+const INITIAL_CLOUDS=11; // matches characters in "06 / 23 / 2024"
 
 // Helper
-function el(tag,cls){ const d=document.createElement(tag); if(cls)d.className=cls; return d; }
+function el(tag,cls){const d=document.createElement(tag); if(cls)d.className=cls; return d;}
 
-// 🌸 Flower coordinates for "I LOVE YOU MARY" (rough manual layout)
-const lettersCoords = [
-  // X,Y for each flower (adjusted for curve), example small array
-  {x:100,y:50},{x:120,y:50},{x:140,y:50},{x:160,y:50},
-  {x:220,y:50},{x:240,y:50},{x:260,y:50},{x:280,y:50},
-  {x:320,y:50},{x:340,y:50},{x:360,y:50},{x:380,y:50},
-  {x:420,y:50},{x:440,y:50},{x:460,y:50},{x:480,y:50},
-  {x:520,y:50},{x:540,y:50},{x:560,y:50},{x:580,y:50}
-]; // Add more coordinates for denser letters
+// Flower letters coordinates (bigger letters, more pronounced)
+const lettersCoords=[];
+const startX=100; const startY=50; const letterSpacing=60;
+const letters="I LOVE YOU MARY";
+letters.split("").forEach((char,i)=>{
+  if(char===" "){return;}
+  // place 12 flowers per letter
+  for(let j=0;j<12;j++){
+    const x=startX+i*letterSpacing + Math.random()*40-20;
+    const y=startY + Math.random()*60;
+    lettersCoords.push({x,y});
+  }
+});
 
-// Clouds array
+// Clouds for date characters
+const dateChars="06 / 23 / 2024".split("");
 let cloudElems=[];
 
 // Spawn initial drifting clouds
 function spawnInitialClouds(){
   for(let i=0;i<INITIAL_CLOUDS;i++){
-    const c=el('div','cloud');
-    const left=Math.random()*window.innerWidth;
-    const top=Math.random()*window.innerHeight*0.45;
-    c.style.left=left+'px'; c.style.top=top+'px';
-    sky.appendChild(c);
-    cloudElems.push(c);
+    const c=el('div','cloud'); c.textContent="";
+    c.style.left=Math.random()*window.innerWidth+'px';
+    c.style.top=Math.random()*window.innerHeight*0.45+'px';
+    sky.appendChild(c); cloudElems.push(c);
   }
 }
 
-// Place flowers on ground
+// Place flowers
 function placeFlowers(){
   lettersCoords.forEach(p=>{
     const f=el('div','flower');
     f.style.left=p.x+'px'; f.style.top=p.y+'px';
-    f.style.backgroundImage=Math.random()<0.5 ? 'url(rose.png)' : 'url(hibiscus.png)';
+    f.style.backgroundImage=Math.random()<0.5?'url(rose.png)':'url(hibiscus.png)';
     garden.appendChild(f);
     setTimeout(()=>{f.style.opacity=1; f.style.transform='scale(1)';}, Math.random()*800);
   });
-  // petals
+  // Petals
   for(let i=0;i<PETAL_COUNT;i++){
     const p=el('div','petal');
     p.style.left=Math.random()*window.innerWidth+'px';
@@ -57,40 +59,33 @@ function placeFlowers(){
   }
 }
 
-// Clouds form upward arc for date
+// Clouds form date in upward arc
 function cloudsFormDate(){
-  const dateText="06 / 23 / 2024";
   const topBase=window.innerHeight*0.12;
   const arcHeight=60;
   cloudElems.forEach((c,i)=>{
-    const x=50+ i*(window.innerWidth-100)/cloudElems.length;
+    const x=50+i*(window.innerWidth-100)/cloudElems.length;
     const y=topBase - Math.sin((i/cloudElems.length)*Math.PI)*arcHeight;
+    c.textContent=dateChars[i] || "";
     c.classList.add('letter');
-    setTimeout(()=>{c.style.left=x+'px'; c.style.top=y+'px'; c.style.opacity=1;}, i*150);
+    setTimeout(()=>{c.style.left=x+'px'; c.style.top=y+'px'; c.style.opacity=1;}, i*200);
   });
 }
 
 // Button clicks
 btn.addEventListener('click',()=>{
   if(step===0){
-    placeFlowers();
-    btn.textContent="Water the Garden";
-    step=1;
+    placeFlowers(); btn.textContent="Water the Garden"; step=1;
   }else if(step===1){
-    // water animation optional
-    btn.textContent="Water Again";
-    step=2;
+    btn.textContent="Water Again"; step=2;
   }else if(step===2){
-    // final bloom optional
-    btn.textContent="Look Up";
-    step=3;
+    btn.textContent="Look Up"; step=3;
   }else if(step===3){
-    // sunset sky
     sky.classList.add('sunset');
     cloudsFormDate();
     if(music){music.volume=0; music.play(); let vol=0; const t=setInterval(()=>{vol+=0.02; music.volume=Math.min(0.55,vol); if(vol>=0.54)clearInterval(t);},120);}
     const msg=el('div'); msg.id='finalMsg'; msg.textContent="🌤️ Every flower blooms for you, sweetheart. 💕"; document.getElementById('scene').appendChild(msg);
-    setTimeout(()=>msg.style.opacity=1, 1800);
+    setTimeout(()=>msg.style.opacity=1,1800);
     btn.style.display='none';
     step=4;
   }
