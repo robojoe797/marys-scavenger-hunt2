@@ -1,47 +1,48 @@
-/* Additional flower and leaf styling */
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+#scene { position: relative; width: 100%; height: 100%; overflow: hidden; }
+#sky { position: absolute; width: 100%; height: 100%; background: linear-gradient(to top, #87CEEB, #B0E0E6); z-index: 1; }
+#field { position: absolute; bottom: 0; width: 100%; height: 50%; background: #3CB371; z-index: 2; }
+#garden { position: absolute; bottom: 50px; width: 100%; height: calc(50% - 50px); z-index: 3; }
+button#actionBtn {
+  position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
+  padding: 12px 20px; font-size: 18px; background-color: #FFB6C1; border: none;
+  border-radius: 8px; cursor: pointer; z-index: 4;
+}
+
 .flower {
-    position: absolute;
-    width: 40px;
-    height: 40px;
-    background-size: cover;
-    opacity: 0;
-    transform: scale(0) rotate(0deg);
-    transition: transform 1s ease, opacity 1s ease;
-    z-index: 4;
+  position: absolute; width: 40px; height: 40px; background-size: cover;
+  opacity: 0; transform: scale(0) rotate(0deg);
+  transition: transform 1s ease, opacity 1s ease;
+  z-index: 4;
 }
 
 .leaf {
-    width: 12px;
-    height: 12px;
-    background: green;
-    border-radius: 50%;
-    position: absolute;
-    opacity: 0;
-    animation: sway 2s infinite ease-in-out alternate;
+  width: 12px; height: 12px; background: green; border-radius: 50%;
+  position: absolute; opacity: 0;
+  animation: sway 2s infinite ease-in-out alternate;
 }
 
 @keyframes sway {
-    0% { transform: translateX(0) rotate(0deg); }
-    50% { transform: translateX(4px) rotate(5deg); }
-    100% { transform: translateX(0) rotate(0deg); }
+  0% { transform: translateX(0) rotate(0deg); }
+  50% { transform: translateX(4px) rotate(5deg); }
+  100% { transform: translateX(0) rotate(0deg); }
 }
 
-/* Clouds */
 .cloud {
-    position: absolute;
-    font-size: 48px;
-    color: white;
-    opacity: 0;
-    transition: opacity 3s ease, transform 8s linear;
-    z-index: 2;
+  position: absolute; font-size: 48px; color: white;
+  opacity: 0; transition: opacity 3s ease, transform 8s linear; z-index: 2;
 }
 
-/* Romantic message glow */
 #finalMsg {
-    font-size: 36px;
-    color: #fff;
-    text-align: center;
-    opacity: 0;
-    text-shadow: 0 0 8px pink, 0 0 15px #fff;
-    transition: opacity 3s ease;
+  font-size: 36px; color: #fff; text-align: center; opacity: 0;
+  text-shadow: 0 0 8px pink, 0 0 15px #fff;
+  transition: opacity 3s ease;
+  position: absolute; top: 150px; left: 50%; transform: translateX(-50%);
 }
