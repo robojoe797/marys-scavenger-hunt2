@@ -96,7 +96,7 @@ function placeFlowersForGround(){
   // text to draw: "I LOVE YOU MARY"
   const text = "I LOVE YOU MARY";
   // pick font size proportional to screen width
-  const fontSize = Math.floor(Math.max(48, window.innerWidth / 12));
+  const fontSize = Math.floor(Math.max(80, window.innerWidth / 8));
   const font = `${fontSize}px "Georgia", serif`;
   const sample = sampleTextToPoints(text, font, 0, 0, true);
   const pts = sample.points;
