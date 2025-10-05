@@ -4,84 +4,114 @@ const sky = document.getElementById('sky');
 const music = document.getElementById('music');
 let step = 0;
 
-// Flower positions for letters
-const flowers = [
+// Base letter coordinates
+const baseLetters = [
   // I
-  {x:100, y:200, type:'rose'},
-  {x:100, y:230, type:'rose'},
-  {x:100, y:260, type:'rose'},
-
+  {x:100, y:200, type:'rose', w:10, h:60},
   // L
-  {x:150, y:200, type:'hibiscus'},
-  {x:150, y:230, type:'hibiscus'},
-  {x:150, y:260, type:'hibiscus'},
-  {x:180, y:260, type:'hibiscus'},
-  {x:210, y:260, type:'hibiscus'},
-
+  {x:150, y:200, type:'hibiscus', w:40, h:60},
   // O
-  {x:250, y:230, type:'rose'},
-  {x:280, y:200, type:'rose'},
-  {x:310, y:230, type:'rose'},
-  {x:280, y:260, type:'rose'},
-
+  {x:250, y:200, type:'rose', w:60, h:60},
   // V
-  {x:350, y:200, type:'hibiscus'},
-  {x:370, y:260, type:'hibiscus'},
-  {x:390, y:200, type:'hibiscus'},
-
+  {x:350, y:200, type:'hibiscus', w:60, h:60},
   // E
-  {x:420, y:200, type:'rose'},
-  {x:420, y:230, type:'rose'},
-  {x:420, y:260, type:'rose'},
-  {x:450, y:200, type:'rose'},
-  {x:450, y:230, type:'rose'},
-  {x:480, y:200, type:'rose'},
-
+  {x:450, y:200, type:'rose', w:50, h:60},
   // Y
-  {x:520, y:200, type:'hibiscus'},
-  {x:540, y:230, type:'hibiscus'},
-  {x:560, y:200, type:'hibiscus'},
-  {x:540, y:260, type:'hibiscus'},
-
+  {x:520, y:200, type:'hibiscus', w:50, h:60},
   // O
-  {x:600, y:230, type:'rose'},
-  {x:630, y:200, type:'rose'},
-  {x:660, y:230, type:'rose'},
-  {x:630, y:260, type:'rose'},
-
+  {x:600, y:200, type:'rose', w:60, h:60},
   // U
-  {x:700, y:200, type:'hibiscus'},
-  {x:700, y:260, type:'hibiscus'},
-  {x:730, y:260, type:'hibiscus'},
-  {x:760, y:260, type:'hibiscus'},
-  {x:760, y:200, type:'hibiscus'},
-
+  {x:700, y:200, type:'hibiscus', w:60, h:60},
   // M
-  {x:800, y:260, type:'rose'},
-  {x:800, y:200, type:'rose'},
-  {x:830, y:230, type:'rose'},
-  {x:860, y:200, type:'rose'},
-  {x:860, y:260, type:'rose'},
-
+  {x:800, y:200, type:'rose', w:60, h:60},
   // A
-  {x:900, y:260, type:'hibiscus'},
-  {x:920, y:200, type:'hibiscus'},
-  {x:940, y:260, type:'hibiscus'},
-  {x:920, y:230, type:'hibiscus'},
-
+  {x:900, y:200, type:'hibiscus', w:50, h:60},
   // R
-  {x:980, y:260, type:'rose'},
-  {x:980, y:200, type:'rose'},
-  {x:1010, y:200, type:'rose'},
-  {x:1010, y:230, type:'rose'},
-  {x:1010, y:260, type:'rose'},
-
+  {x:980, y:200, type:'rose', w:50, h:60},
   // Y
-  {x:1050, y:200, type:'hibiscus'},
-  {x:1070, y:230, type:'hibiscus'},
-  {x:1090, y:200, type:'hibiscus'},
-  {x:1070, y:260, type:'hibiscus'},
+  {x:1050, y:200, type:'hibiscus', w:50, h:60},
 ];
+
+// Generate multiple flowers for each letter
+function generateFlowers() {
+  const flowers = [];
+  baseLetters.forEach(letter=>{
+    const cols = Math.floor(letter.w / 10);
+    const rows = Math.floor(letter.h / 10);
+    for(let i=0;i<cols;i++){
+      for(let j=0;j<rows;j++){
+        flowers.push({
+          x: letter.x + i*10 + Math.random()*5, 
+          y: letter.y + j*10 + Math.random()*5,
+          type: letter.type
+        });
+      }
+    }
+  });
+  return flowers;
+}
+
+const flowers = generateFlowers();
+
+btn.addEventListener('click', () => {
+  if(step===0) plantSeeds();
+  else if(step===1) waterOnce();
+  else if(step===2) waterAgain();
+  else if(step===3) lookUp();
+});
+
+function plantSeeds() {
+  flowers.forEach(pos=>{
+    const f = document.createElement('div');
+    f.classList.add('flower');
+    f.style.left = pos.x+'px';
+    f.style.top = pos.y+'px';
+    f.style.backgroundImage = pos.type==='rose'?'url(rose.png)':'url(hibiscus.png)';
+    garden.appendChild(f);
+  });
+  btn.textContent="Water the Garden"; step++;
+}
+
+function waterOnce() {
+  document.querySelectorAll('.flower').forEach(f=>{
+    f.style.opacity=1;
+    f.style.transform="scale(0.5) rotate(-5deg)";
+  });
+  btn.textContent="Water Again"; step++;
+}
+
+function waterAgain() {
+  document.querySelectorAll('.flower').forEach((f,i)=>{
+    setTimeout(()=>f.style.transform="scale(1) rotate(0deg)", i*50);
+  });
+  btn.textContent="Look Up"; step++;
+}
+
+function lookUp() {
+  btn.style.display="none";
+  music.volume=0; music.play();
+  let vol=0; const fade=setInterval(()=>{ if(vol<0.5){vol+=0.01; music.volume=vol;} else clearInterval(fade); },100);
+
+  sky.style.transition="transform 8s ease-in-out"; sky.style.transform="translateY(-100px)";
+  garden.style.transition="transform 8s ease-in-out"; garden.style.transform="translateY(-50px)";
+
+  const cloudText="06 / 23 / 2024";
+  cloudText.split("").forEach((c,i)=>{
+    const cloud=document.createElement('div');
+    cloud.classList.add('cloud');
+    cloud.style.left=(100+i*40)+'px';
+    cloud.style.top="50px";
+    cloud.textContent=c;
+    sky.appendChild(cloud);
+    setTimeout(()=>{ cloud.style.opacity=1; cloud.style.transform="translateX(20px)"; }, i*300);
+  });
+
+  setTimeout(()=>{
+    const msg=document.createElement('div'); msg.id='finalMsg';
+    msg.textContent="🌤️ Every flower blooms for you, sweetheart. 💕"; sky.appendChild(msg);
+    setTimeout(()=>msg.style.opacity=1,500);
+  },4000);
+}
 
 
 btn.addEventListener('click', () => {
