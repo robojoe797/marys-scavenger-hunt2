@@ -13,30 +13,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function el(tag, cls){ const d=document.createElement(tag); if(cls) d.className=cls; return d; }
 
-  const fieldTop = window.innerHeight * 0.35;
+  const gardenRect = garden.getBoundingClientRect();
+  const fieldTop = gardenRect.top;
+  const fieldHeight = gardenRect.height;
 
-  // Create letter mapping for "I LOVE YOU MARY"
+  // Responsive flower placement along letters
   function generateFlowerCoords() {
     const lettersCoords = [];
     const canvas = document.createElement('canvas');
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight * 0.4;
+    canvas.width = gardenRect.width;
+    canvas.height = fieldHeight;
     const ctx = canvas.getContext('2d');
 
     // Draw the letters invisibly
-    ctx.font = 'bold 120px serif';
+    ctx.font = `bold ${Math.floor(canvas.width*0.07)}px serif`;
     ctx.fillStyle = 'black';
     ctx.textBaseline = 'top';
-    ctx.fillText("I LOVE YOU MARY", 50, 0);
+    ctx.fillText("I LOVE YOU MARY", 5, 0);
 
     const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
 
-    for(let y = 0; y < canvas.height; y += 8){ // vertical step
-      for(let x = 0; x < canvas.width; x += 8){ // horizontal step
+    for(let y = 0; y < canvas.height; y += 6){
+      for(let x = 0; x < canvas.width; x += 6){
         const alpha = imgData[(y*canvas.width + x)*4 + 3];
-        if(alpha > 128){ // pixel belongs to a letter
+        if(alpha > 128){
           lettersCoords.push({
-            x: x + (Math.random()*6-3), // small randomness
+            x: x + (Math.random()*6-3),
             y: fieldTop + y + (Math.random()*6-3)
           });
         }
@@ -47,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const lettersCoords = generateFlowerCoords();
 
-  // Spawn initial clouds
+  // Spawn clouds
   function spawnInitialClouds(){
     cloudElems = [];
     for(let i=0;i<INITIAL_CLOUDS;i++){
