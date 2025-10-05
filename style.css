@@ -1,81 +1,113 @@
-* { box-sizing: border-box; }
-html,body { height:100%; margin:0; padding:0; font-family:'Segoe UI', sans-serif; }
-#scene { position:relative; width:100%; height:100vh; overflow:hidden; }
+body, html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: sans-serif;
+  background: linear-gradient(to top, #87ceeb, #b0e0e6);
+}
 
-/* Sky & sunset transition */
+#scene {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
 #sky {
-  position:absolute; inset:0;
-  background: linear-gradient(to top, #7ec0ee 0%, #bfe9ff 50%, #e6f7ff 100%);
-  z-index:1;
-  transition: background 5s ease-in-out;
-}
-#sky.sunset {
-  background: linear-gradient(to top, #ffb38c 0%, #ffdab3 50%, #ffe6f0 100%);
-}
-
-/* Grass field */
-#field {
-  position:absolute; left:0; right:0; bottom:0;
-  height:46%;
-  background: linear-gradient(180deg,#2e8b57,#3cb371 60%,#7cfc00 100%);
-  z-index:2;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 55%;   /* sky top portion */
+  background: linear-gradient(to top, #87ceeb, #ffd1a4); /* sunset gradient */
+  z-index: 0;
+  overflow: visible;
 }
 
-/* Garden layer */
-#garden { position:absolute; left:0; right:0; bottom:60px; height:calc(46%-60px); z-index:4; pointer-events:none; }
+#garden {
+  position: absolute;
+  top: 35%;       /* framed garden */
+  left: 0;
+  width: 100%;
+  height: 45%;
+  overflow: visible;
+  z-index: 1;
+  pointer-events: none;
+}
 
-/* Action button */
-button#actionBtn {
+.flower {
+  position: absolute;
+  width: 35px;
+  height: 35px;
+  background-size: cover;
+  opacity: 0;
+  transform: scale(0);
+  transition: all 0.8s ease;
+  z-index: 2;
+}
+
+.petal {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: pink;
+  border-radius: 50%;
+  opacity: 0.8;
+  z-index: 3;
+  animation-name: fall;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+@keyframes fall {
+  0% { transform: translateY(0px) rotate(0deg); }
+  100% { transform: translateY(100vh) rotate(360deg); }
+}
+
+.cloud {
+  position: absolute;
+  font-size: 32px;
+  color: #fff;
+  opacity: 0.7;
+  font-weight: bold;
+  text-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+  transition: all 0.8s ease;
+  z-index: 3;
+}
+
+.letter {
+  color: orange;
+}
+
+.sunset {
+  background: linear-gradient(to top, #ffb347, #ffcc33);
+}
+
+#actionBtn {
   position: absolute;
   bottom: 14px;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 9999; /* Ensure it's above all other elements */
+  z-index: 9999;
   padding: 12px 20px;
   border-radius: 10px;
   border: none;
   font-size: 16px;
-  background: linear-gradient(180deg, #ffb6c1, #ff8aa3);
+  background: linear-gradient(180deg,#ffb6c1,#ff8aa3);
   color: #3b0b17;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
   cursor: pointer;
 }
 
-
-/* Flower styling */
-.flower {
-  position:absolute; width:20px; height:20px;
-  background-size:cover; background-position:center;
-  opacity:0; transform:scale(0) rotate(0deg);
-  transition: transform 900ms cubic-bezier(.2,.9,.2,1), opacity 700ms ease;
-  z-index:5; pointer-events:none;
-}
-
-/* Petals */
-.petal {
-  position:absolute; width:14px; height:14px;
-  background: radial-gradient(circle at 40% 30%, #ffd4e1 0 45%, #ff9fc1 46% 100%);
-  border-radius:50% 45% 45% 50%; opacity:0.9; z-index:5; pointer-events:none;
-  animation: petalFall linear infinite;
-}
-@keyframes petalFall {
-  0% { transform:translateY(0) rotate(0deg); opacity:1; }
-  80% { opacity:0.9; }
-  100% { transform:translateY(650px) rotate(360deg); opacity:0; }
-}
-
-/* Clouds */
-.cloud {
-  position:absolute; background:white; border-radius:50px; width:120px; height:60px;
-  opacity:0.9; z-index:3; transform:translate3d(0,0,0);
-  display:flex; justify-content:center; align-items:center; font-weight:bold; font-size:28px; color:orange;
-}
-.cloud.letter { width:68px; height:68px; transition: all 1.2s cubic-bezier(.2,.9,.2,1); }
-
-/* Final message */
 #finalMsg {
-  position:absolute; top:12%; left:50%; transform:translateX(-50%);
-  font-size:32px; color:#fff; opacity:0;
-  text-shadow:0 0 12px rgba(255,200,230,0.9),0 0 28px rgba(255,255,255,0.25);
-  z-index:6; pointer-events:none;
+  position: absolute;
+  bottom: 10%;
+  width: 100%;
+  text-align: center;
+  font-size: 24px;
+  color: #fff;
+  opacity: 0;
+  transition: opacity 1.5s ease;
+  z-index: 9998;
 }
