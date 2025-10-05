@@ -1,3 +1,17 @@
+
+document.addEventListener('DOMContentLoaded', ()=>{
+
+  const btn = document.getElementById('actionBtn');
+  const garden = document.getElementById('garden');
+  const sky = document.getElementById('sky');
+  const music = document.getElementById('music');
+  let step = 0;
+
+  // ... rest of your script here, unchanged ...
+
+
+
+
 const btn = document.getElementById('actionBtn');
 const garden = document.getElementById('garden');
 const sky = document.getElementById('sky');
@@ -61,4 +75,4 @@ function placeFlowers(){
   for(let i=0;i<PETAL_COUNT;i++){
     const p
 
-  
+});
