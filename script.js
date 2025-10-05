@@ -13,13 +13,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function el(tag, cls){ const d=document.createElement(tag); if(cls) d.className=cls; return d; }
 
-  // 🌸 Flower letters coordinates (framed inside garden)
+  // Flower letters (higher viewport)
   const lettersCoords = [];
   const letters = "I LOVE YOU MARY";
   const numFlowersPerLetter = 12;
-  const fieldTop = window.innerHeight * 0.35;   // start higher
-  const fieldHeight = window.innerHeight * 0.45; // taller range
-  const y = fieldTop + Math.random()*fieldHeight;
+  const fieldTop = window.innerHeight * 0.35;
+  const fieldHeight = window.innerHeight * 0.45;
   const fieldWidth = window.innerWidth;
   const totalLetters = letters.replace(/ /g,"").length;
   let letterIndex = 0;
@@ -34,14 +33,14 @@ document.addEventListener('DOMContentLoaded', () => {
     letterIndex++;
   });
 
-  // Spawn initial clouds
+  // Spawn clouds
   function spawnInitialClouds(){
     cloudElems = [];
     for(let i=0;i<INITIAL_CLOUDS;i++){
       const c = el('div','cloud'); 
       c.textContent = "";
       c.style.left = Math.random()*window.innerWidth + 'px';
-      c.style.top = Math.random()*window.innerHeight*0.45 + 'px';
+      c.style.top = Math.random()*window.innerHeight*0.25 + 'px';
       sky.appendChild(c);
       cloudElems.push(c);
     }
