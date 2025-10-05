@@ -13,27 +13,41 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function el(tag, cls){ const d=document.createElement(tag); if(cls) d.className=cls; return d; }
 
-  // Flower letters (higher viewport)
-  const lettersCoords = [];
-  const letters = "I LOVE YOU MARY";
-  const numFlowersPerLetter = 12;
   const fieldTop = window.innerHeight * 0.35;
-  const fieldHeight = window.innerHeight * 0.45;
-  const fieldWidth = window.innerWidth;
-  const totalLetters = letters.replace(/ /g,"").length;
-  let letterIndex = 0;
 
-  letters.split("").forEach(char => {
-    if(char === " ") return;
-    for(let i=0;i<numFlowersPerLetter;i++){
-      const x = fieldWidth*0.1 + letterIndex*(fieldWidth*0.8/totalLetters) + Math.random()*40-20;
-      const y = fieldTop + Math.random()*fieldHeight;
-      lettersCoords.push({x,y});
+  // Create letter mapping for "I LOVE YOU MARY"
+  function generateFlowerCoords() {
+    const lettersCoords = [];
+    const canvas = document.createElement('canvas');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight * 0.4;
+    const ctx = canvas.getContext('2d');
+
+    // Draw the letters invisibly
+    ctx.font = 'bold 120px serif';
+    ctx.fillStyle = 'black';
+    ctx.textBaseline = 'top';
+    ctx.fillText("I LOVE YOU MARY", 50, 0);
+
+    const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+
+    for(let y = 0; y < canvas.height; y += 8){ // vertical step
+      for(let x = 0; x < canvas.width; x += 8){ // horizontal step
+        const alpha = imgData[(y*canvas.width + x)*4 + 3];
+        if(alpha > 128){ // pixel belongs to a letter
+          lettersCoords.push({
+            x: x + (Math.random()*6-3), // small randomness
+            y: fieldTop + y + (Math.random()*6-3)
+          });
+        }
+      }
     }
-    letterIndex++;
-  });
+    return lettersCoords;
+  }
 
-  // Spawn clouds
+  const lettersCoords = generateFlowerCoords();
+
+  // Spawn initial clouds
   function spawnInitialClouds(){
     cloudElems = [];
     for(let i=0;i<INITIAL_CLOUDS;i++){
@@ -46,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Place flowers
+  // Place flowers along letters
   function placeFlowers(){
     lettersCoords.forEach(p=>{
       const f = el('div','flower');
@@ -57,6 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
       setTimeout(()=>{ f.style.opacity=1; f.style.transform='scale(1)'; }, Math.random()*800);
     });
 
+    // Falling petals
     for(let i=0;i<PETAL_COUNT;i++){
       const p = el('div','petal');
       p.style.left = Math.random()*window.innerWidth+'px';
