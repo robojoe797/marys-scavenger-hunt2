@@ -13,17 +13,23 @@ function el(tag,cls){const d=document.createElement(tag); if(cls)d.className=cls
 
 // Flower letters coordinates (bigger letters, more pronounced)
 const lettersCoords=[];
-const startX=100; const startY=50; const letterSpacing=60;
 const letters="I LOVE YOU MARY";
-letters.split("").forEach((char,i)=>{
-  if(char===" "){return;}
-  // place 12 flowers per letter
-  for(let j=0;j<12;j++){
-    const x=startX+i*letterSpacing + Math.random()*40-20;
-    const y=startY + Math.random()*60;
+const numFlowersPerLetter=12;
+const fieldWidth = window.innerWidth;
+const fieldHeight = window.innerHeight * 0.4; // roughly field height
+const totalLetters = letters.replace(/ /g,"").length;
+let letterIndex = 0;
+
+letters.split("").forEach(char=>{
+  if(char===" "){ return; }
+  for(let i=0;i<numFlowersPerLetter;i++){
+    const x = fieldWidth*0.1 + letterIndex*(fieldWidth*0.8/totalLetters) + Math.random()*40-20;
+    const y = window.innerHeight*0.6 + Math.random()*fieldHeight*0.4;
     lettersCoords.push({x,y});
   }
+  letterIndex++;
 });
+
 
 // Clouds for date characters
 const dateChars="06 / 23 / 2024".split("");
